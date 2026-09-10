@@ -28,7 +28,7 @@ Place 1 block of your base material on the left, 1 standard chimney of that vari
 ## Installation & Dependencies
 
 1. Clone or download this repository into your Luanti `mods/` directory.
-2. Ensure the folder name is strictly lowercase: `chimney`
+2. Ensure the folder name is strictly lowercase: `chimney_mtg`
 3. Enable the mod in your world settings.
 
 **Dependencies:** `default` (from Minetest Game)
