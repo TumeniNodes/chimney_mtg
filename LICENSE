@@ -1,0 +1,76 @@
+=== CODE LICENSE (MIT) ===
+
+Copyright (c) 2026 TumeniNodes
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+==================================================================================
+
+All custom media assets contained within this mod are licensed under the Creative
+Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0) unless
+stated otherwise below.
+
+These assets were created by TumeniNodes:
+
+3D Models (models/)
+===================
+- chimney.obj
+- chimney_top.obj
+- fire_logs.obj
+- fire_logs_burning.obj
+- all 'bbmodels'
+
+Textures (textures/)
+====================
+- iron.png
+- all screenshots
+
+Audio (sounds/)
+===============
+- fire_logs_burning.ogg
+
+
+===============================
+REUSED AND DERIVATIVE MATERIALS
+===============================
+
+The following assets are derived from or reused core Minetest Game assets and
+maintain their respective license:
+
+fire_logs_burning.png
+=====================
+- Contains direct usage of "fire_basic_flame_animated.png" from the 'fire' mod of
+  Minetest Game.
+- Original license: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0).
+- This asset is distributed under the CC BY-SA 3.0 license.
+
+fire_logs.png
+=============
+- This asset is a custom derivative built from "default_aspen_tree.png" and
+  "default_aspen_tree_top.png" from the 'default' mod of Minetest Game.
+- Original asset license: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0).
+- This derivative is distributed under the CC BY-SA 3.0 license.
+
+on_punch sounds
+===============
+- These assets are used directly to light, and extinguish the fire (respectively);
+- fire_flint_and_steel.ogg
+- fire_extinguish_flame.ogg
+- Original asset license: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0).
+- These assets are distributed under the CC BY-SA 3.0 license.
