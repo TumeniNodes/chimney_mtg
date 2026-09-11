@@ -50,27 +50,30 @@ Audio (sounds/)
 REUSED AND DERIVATIVE MATERIALS
 ===============================
 
-The following assets are derived from or reused core Minetest Game assets and
-maintain their respective license:
+The following assets are derived from or reused core Minetest Game assets.
+Source repository: https://github.com/luanti-org/minetest_game
 
 fire_logs_burning.png
 =====================
-- Contains direct usage of "fire_basic_flame_animated.png" from the 'fire' mod of
-  Minetest Game.
-- Original license: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0).
-- This asset is distributed under the CC BY-SA 3.0 license.
+- Contains direct usage of "fire_basic_flame_animated.png" from the 'fire' mod.
+- Original Authors: Minetest Game Contributors
+- Original License: CC BY-SA 3.0 Unported (https://creativecommons.org/licenses/by-sa/3.0/)
+- This asset is distributed under the identical CC BY-SA 3.0 Unported license.
 
 fire_logs.png
 =============
 - This asset is a custom derivative built from "default_aspen_tree.png" and
-  "default_aspen_tree_top.png" from the 'default' mod of Minetest Game.
-- Original asset license: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0).
-- This derivative is distributed under the CC BY-SA 3.0 license.
+  "default_aspen_tree_top.png" from the 'default' mod.
+- Original Author: sofar
+- Modifications: Cut, rearranged, and edited into a custom pile log layout.
+- Original License: CC BY-SA 3.0 Unported (https://creativecommons.org/licenses/by-sa/3.0/)
+- This derivative is distributed under the identical CC BY-SA 3.0 Unported license.
 
 on_punch sounds
 ===============
-- These assets are used directly to light, and extinguish the fire (respectively);
-- fire_flint_and_steel.ogg
-- fire_extinguish_flame.ogg
-- Original asset license: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0).
-- These assets are distributed under the CC BY-SA 3.0 license.
+- These assets are used directly to light and extinguish the fire:
+  - fire_flint_and_steel.ogg
+  - fire_extinguish_flame.ogg
+- Original Authors: Minetest Game Contributors
+- Original License: CC BY-SA 3.0 Unported (https://creativecommons.org/licenses/by-sa/3.0/)
+- These assets are distributed under the identical CC BY-SA 3.0 Unported license.
