@@ -51,7 +51,7 @@ function chimney_mtg.register_chimney(chimney_name, chimney_def)
         description = (description .. " Chimney"),
         groups = groups,
         drawtype = "mesh",
-        mesh = "chimney.obj",
+        mesh = "chimney_mtg_chimney.obj",
         tiles = {main_texture},
         sounds = sounds,
         paramtype = "light",
@@ -65,7 +65,7 @@ function chimney_mtg.register_chimney(chimney_name, chimney_def)
         description = (description .. " Chimney Top"),
         groups = groups,
         drawtype = "mesh",
-        mesh = "chimney_top.obj",
+        mesh = "chimney_mtg_chimney_top.obj",
         tiles = {
             main_texture,
             top_texture
@@ -133,10 +133,10 @@ end)
 minetest.register_node("chimney_mtg:fire_logs", {
     description = "Fire Logs",
     drawtype = "mesh",
-    mesh = "fire_logs.obj",
+    mesh = "chimney_mtg_fire_logs.obj",
     tiles = {
-        "iron.png",
-        "fire_logs.png"
+        "chimney_mtg_iron.png",
+        "chimney_mtg_fire_logs.png"
     },
     paramtype = "light",
     paramtype2 = "facedir",
@@ -166,10 +166,10 @@ minetest.register_node("chimney_mtg:fire_logs", {
 minetest.register_node("chimney_mtg:fire_logs_burning", {
     description = "Burning Fire Logs",
     drawtype = "mesh",
-    mesh = "fire_logs_burning.obj",
+    mesh = "chimney_mtg_fire_logs_burning.obj",
     tiles = {
-        "iron.png",
-        "fire_logs.png",
+        "chimney_mtg_iron.png",
+        "chimney_mtg_fire_logs.png",
         {
             name = "fire_basic_flame_animated.png",
             animation = {
@@ -219,6 +219,50 @@ minetest.register_node("chimney_mtg:fire_logs_burning", {
             chimney_mtg.sound_handles[id] = nil
         end
     end,
+
+    -- STICK ROASTING COOKING SYSTEM
+    on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+        local wielded_item = itemstack:get_name()
+
+        local cooked = ""
+        if wielded_item == "chimney_mtg:marshmallow_raw" then
+            cooked = "chimney_mtg:marshmallow_toasted"
+        elseif wielded_item == "chimney_mtg:sausage_raw" then
+            cooked = "chimney_mtg:sausage_cooked"
+        else
+            return nil
+        end
+
+        if itemstack:get_count() == 1 then
+            itemstack:set_name(cooked)
+        else
+            itemstack:take_item(1)
+            local inv = clicker:get_inventory()
+            local leftover = inv:add_item("main", cooked)
+            if not leftover:is_empty() then
+                minetest.add_item(pos, leftover)
+            end
+        end
+
+        minetest.sound_play("default_cool_lava", {pos = pos, gain = 0.5}, true)
+        minetest.add_particlespawner({
+            amount = 8,
+            time = 0.3,
+            minpos = {x = pos.x - 0.1, y = pos.y + 0.4, z = pos.z - 0.1},
+            maxpos = {x = pos.x + 0.1, y = pos.y + 0.5, z = pos.z + 0.1},
+            minvel = {x = -0.2, y = 1.0, z = -0.2},
+            maxvel = {x = 0.2, y = 1.5, z = 0.2},
+            minacc = {x = 0, y = 0, z = 0},
+            maxacc = {x = 0, y = 0, z = 0},
+            minexptime = 0.5,
+            maxexptime = 1.0,
+            minsize = 1,
+            maxsize = 2,
+            texture = "chimney_mtg_smoke.png^[opacity:240",
+        })
+
+        return itemstack
+    end
 })
 
 
@@ -236,7 +280,7 @@ minetest.register_abm({
     action = function(pos, node, active_object_count, active_object_count_wider)
         local id = minetest.hash_node_position(pos)
         if not chimney_mtg.sound_handles[id] then
-            chimney_mtg.sound_handles[id] = minetest.sound_play("fire_logs_burning", {
+            chimney_mtg.sound_handles[id] = minetest.sound_play("chimney_mtg_fire_logs_burning", {
                 pos = pos,
                 gain = 0.4,
                 max_hear_distance = 12,
@@ -260,7 +304,7 @@ minetest.register_abm({
             collisiondetection = true,
             collision_removal = false,
             object_collision = false,
-            texture = "default_item_smoke.png",
+            texture = "default_item_smoke.png^[opacity:120",
             glow = 2,
         })
 
@@ -285,3 +329,114 @@ minetest.register_abm({
         })
     end,
 })
+
+
+-- =====
+-- TOOLS
+-- =====
+
+minetest.register_tool("chimney_mtg:whittled_stick", {
+	description = "Whittled Roasting Stick",
+	inventory_image = "chimney_mtg_whittled_stick.png",
+})
+
+minetest.register_craft({
+	output = "chimney_mtg:whittled_stick",
+	recipe = {
+		{"", "", "default:stick"},
+		{"", "default:stick", ""},
+		{"default:stick", "", ""},
+	}
+})
+
+
+-- =====
+-- FOODS
+-- =====
+
+minetest.register_craftitem("chimney_mtg:marshmallow_raw", {
+	description = "Raw Marshmallow",
+	inventory_image = "chimney_mtg_marshmallow_raw.png",
+})
+
+minetest.register_craftitem("chimney_mtg:sausage_raw", {
+	description = "Raw Sausage",
+	inventory_image = "chimney_mtg_sausage_raw.png",
+
+	on_use = function(itemstack, user, pointed_thing)
+		if not user then return nil end
+
+		user:set_hp(math.min(20, user:get_hp() + 2))
+
+		itemstack:set_name("chimney_mtg:whittled_stick")
+		return itemstack
+	end,
+})
+
+
+minetest.register_craftitem("chimney_mtg:marshmallow_toasted", {
+	description = "Toasted Marshmallow",
+	inventory_image = "chimney_mtg_marshmallow_toasted.png",
+
+	on_use = function(itemstack, user, pointed_thing)
+		if not user then return nil end
+
+		user:set_hp(math.min(20, user:get_hp() + 2))
+
+		minetest.sound_play("chimney_mtg_mmm", {object = user, gain = 0.8}, true)
+
+		itemstack:set_name("chimney_mtg:whittled_stick")
+		return itemstack
+	end,
+})
+
+minetest.register_craftitem("chimney_mtg:sausage_cooked", {
+	description = "Cooked Sausage",
+	inventory_image = "chimney_mtg_sausage_cooked.png",
+
+	on_use = function(itemstack, user, pointed_thing)
+		if not user then return nil end
+
+		user:set_hp(math.min(20, user:get_hp() + 5))
+
+		minetest.sound_play("chimney_mtg_mmm", {object = user, gain = 0.8}, true)
+
+		itemstack:set_name("chimney_mtg:whittled_stick")
+		return itemstack
+	end,
+})
+
+
+minetest.register_on_player_inventory_action(function(player, action, inventory, inventory_info)
+	local itemstack = player:get_wielded_item()
+	if itemstack:get_name() ~= "chimney_mtg:whittled_stick" then
+		return
+	end
+
+	local listname = inventory_info.listname or inventory_info.from_list or inventory_info.to_list
+	if listname ~= "main" then return end
+
+	local index = inventory_info.index or inventory_info.from_index or inventory_info.to_index
+	if not index then return end
+
+	local clicked_stack = inventory:get_stack("main", index)
+	local clicked_item = clicked_stack:get_name()
+
+	local food_stick_version = ""
+	if clicked_item == "chimney_mtg:marshmallow_raw" then
+		food_stick_version = "chimney_mtg:marshmallow_raw"
+	elseif clicked_item == "chimney_mtg:sausage_raw" then
+		food_stick_version = "chimney_mtg:sausage_raw"
+	end
+
+	if food_stick_version ~= "" then
+		clicked_stack:take_item(1)
+		inventory:set_stack("main", index, clicked_stack)
+
+		itemstack:set_name(food_stick_version)
+		player:set_wielded_item(itemstack)
+
+		minetest.sound_play("default_place_node", {object = player, gain = 0.5}, true)
+	end
+end)
+

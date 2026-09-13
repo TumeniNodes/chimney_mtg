@@ -10,11 +10,16 @@ Designed specifically for **Minetest Game (MTG)**
 - **Interactive Fire Logs:**
   - **Ignition:** Wield a standard `default:torch` and left-click (punch) the unlit logs to light them up.
   - **Extinguish:** Left-click (punch) the burning logs with any tool, block, or bare hand to safely put out the fire.
+  - **Campfire Roasting:** Click an inventory food item while holding an empty stick to load it up. Right-click the burning logs while holding a raw food stick to instantly toast it in your active slot.
+- **Campfire Foods & Tools:**
+  - Craft a reusable `Whittled Roasting Stick` out of basic sticks.
+  - Left-click to eat your `Toasted Marshmallows` or `Cooked Sausages` to restore health, play a custom crunch sound, and return your empty stick back to your active slot.
 - **Atmospheric Effects:**
   - Ambient fireplace audio / visual (fire_logs_burning) while lit.
   - The smoke particles float up to 8 blocks straight up inside your chimney shafts without clipping through walls, and so they billow out from the chimney top.
-  - Tiny, glowing, floating ambers/sparks for some extra, calming visual effects.
+  - Tiny, glowing, floating embers/sparks for some extra, calming visual effects.
   - Emits (`light_source = 12`) and deals fire damage to entities standing directly on them.
+
 
 ## Crafting Recipes
 (these may need to be changed, I am not good at doing recipes)

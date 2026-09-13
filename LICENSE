@@ -30,20 +30,26 @@ These assets were created by TumeniNodes:
 
 3D Models (models/)
 ===================
-- chimney.obj
-- chimney_top.obj
-- fire_logs.obj
-- fire_logs_burning.obj
+- chimney_mtg_chimney.obj
+- chimney_mtg_chimney_top.obj
+- chimney_mtg_fire_logs.obj
+- chimney_mtg_fire_logs_burning.obj
 - all 'bbmodels'
 
 Textures (textures/)
 ====================
-- iron.png
+- chimney_mtg_iron.png
+- chimney_mtg_marshmallow_raw.png
+- chimney_mtg_marshmallow_toasted.png
+- chimney_mtg_sausage_cooked.png
+- chimney_mtg_sausage_raw.png
+- chimney_mtg_whittled_stick.png
 - all screenshots
 
 Audio (sounds/)
 ===============
-- fire_logs_burning.ogg
+- chimney_mtg_fire_logs_burning.ogg
+- chimney_mtg_mmm.ogg
 
 
 ===============================
@@ -60,7 +66,7 @@ fire_logs_burning.png
 - Original License: CC BY-SA 3.0 Unported (https://creativecommons.org/licenses/by-sa/3.0/)
 - This asset is distributed under the identical CC BY-SA 3.0 Unported license.
 
-fire_logs.png
+chimney_mtg_fire_logs.png
 =============
 - This asset is a custom derivative built from "default_aspen_tree.png" and
   "default_aspen_tree_top.png" from the 'default' mod.
@@ -68,6 +74,14 @@ fire_logs.png
 - Modifications: Cut, rearranged, and edited into a custom pile log layout.
 - Original License: CC BY-SA 3.0 Unported (https://creativecommons.org/licenses/by-sa/3.0/)
 - This derivative is distributed under the identical CC BY-SA 3.0 Unported license.
+
+chimney_mtg_smoke.png
+=============
+- This asset is a custom derivative built from "default_item_smoke.png"
+- Original Author: Ferk
+- Modifications: Cut, brightness greatly reduced with GIMP.
+- Original License: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/deed.en)
+- This derivative is distributed under the identical CC0 1.0 Universal license.
 
 on_punch sounds
 ===============
