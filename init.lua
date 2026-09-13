@@ -377,6 +377,7 @@ minetest.register_craftitem("chimney_mtg:sausage_raw", {
 minetest.register_craftitem("chimney_mtg:marshmallow_toasted", {
 	description = "Toasted Marshmallow",
 	inventory_image = "chimney_mtg_marshmallow_toasted.png",
+	groups = {not_in_creative_inventory = 1},
 
 	on_use = function(itemstack, user, pointed_thing)
 		if not user then return nil end
@@ -393,6 +394,7 @@ minetest.register_craftitem("chimney_mtg:marshmallow_toasted", {
 minetest.register_craftitem("chimney_mtg:sausage_cooked", {
 	description = "Cooked Sausage",
 	inventory_image = "chimney_mtg_sausage_cooked.png",
+	groups = {not_in_creative_inventory = 1},
 
 	on_use = function(itemstack, user, pointed_thing)
 		if not user then return nil end
