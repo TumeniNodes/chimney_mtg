@@ -39,6 +39,8 @@ These assets were created by TumeniNodes:
 Textures (textures/)
 ====================
 - chimney_mtg_iron.png
+- chimney_mtg_fireplace_grate.png
+- chimney_mtg_aspen_logs.png
 - chimney_mtg_marshmallow_raw.png
 - chimney_mtg_marshmallow_toasted.png
 - chimney_mtg_sausage_cooked.png
@@ -81,6 +83,14 @@ chimney_mtg_smoke.png
 - Original Author: Ferk
 - Modifications: Cut, brightness greatly reduced with GIMP.
 - Original License: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/deed.en)
+- This derivative is distributed under the identical CC0 1.0 Universal license.
+
+chimney_mtg_maul.png
+====================
+- This asset is a custom derivative built from "default_tool_stoneaxe.png"
+- Original Author: Cisoun
+- Modifications: Modified with GIMP to reshape the head into a splitting maul.
+- Original License: CC0 1.0 (https://creativecommons.org)
 - This derivative is distributed under the identical CC0 1.0 Universal license.
 
 on_punch sounds

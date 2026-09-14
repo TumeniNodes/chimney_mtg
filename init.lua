@@ -30,7 +30,7 @@ function chimney_mtg.register_chimney(chimney_name, chimney_def)
         return
     end
 
-     local groups = {}
+    local groups = {}
     if material_node_def.groups then
         for k, v in pairs(material_node_def.groups) do
             groups[k] = v
@@ -77,7 +77,7 @@ function chimney_mtg.register_chimney(chimney_name, chimney_def)
         collision_box = full_block_box,
     })
 
-    -- Crafting Recipes
+    -- Crafting
     local raw_chimney = "chimney_mtg:chimney_" .. chimney_name
     local raw_top = "chimney_mtg:chimney_top_" .. chimney_name
 
@@ -105,10 +105,9 @@ end
 
 minetest.register_on_mods_loaded(function()
     local chimney_base_nodes = {
-        { material = "default:cobble" }, -- Defaults to sandstone
+        { material = "default:cobble" },
         { material = "default:stonebrick" },
         { material = "default:brick" },
-        -- chimney top nodes
         { material = "default:desert_cobble", top_texture = "default_desert_stone.png" },
         { material = "default:stonebrick", top_texture = "default_stone.png" },
         { material = "default:desert_stonebrick", top_texture = "default_desert_stone.png" },
@@ -123,6 +122,82 @@ minetest.register_on_mods_loaded(function()
         end
     end
 end)
+
+
+minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+	if newnode.name == "default:aspen_tree" and placer and placer:is_player() then
+		local meta = minetest.get_meta(pos)
+		meta:set_string("placed_by_player", "true")
+	end
+end)
+
+minetest.register_craftitem("chimney_mtg:fireplace_grate", {
+	description = "Fireplace Grate",
+	inventory_image = "chimney_mtg_fireplace_grate.png",
+})
+
+minetest.register_craft({
+	output = "chimney_mtg:fireplace_grate",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+	}
+})
+
+minetest.register_craftitem("chimney_mtg:aspen_logs", {
+	description = "Aspen Logs Bundle",
+	inventory_image = "chimney_mtg_aspen_logs.png",
+})
+
+minetest.register_tool("chimney_mtg:maul", {
+	description = "Splitting Maul",
+	inventory_image = "chimney_mtg_maul.png",
+
+	on_use = function(itemstack, user, pointed_thing)
+		if not pointed_thing or pointed_thing.type ~= "node" then
+			return nil
+		end
+
+		local pos = pointed_thing.under
+		local node = minetest.get_node(pos)
+
+		if node.name == "default:aspen_tree" then
+			local meta = minetest.get_meta(pos)
+
+			if meta:get_string("placed_by_player") == "true" then
+				minetest.remove_node(pos)
+				minetest.add_item(pos, "chimney_mtg:aspen_logs")
+				minetest.sound_play("default_wood_footstep", {pos = pos, gain = 0.8}, true)
+
+				if not minetest.settings:get_bool("creative_mode") then
+					itemstack:add_wear(3276)
+				end
+
+				return itemstack
+			end
+		end
+
+		return nil
+	end,
+})
+
+minetest.register_craft({
+	output = "chimney_mtg:maul",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot", ""},
+		{"default:steel_ingot", "default:steel_ingot", "default:stick"},
+		{"",                    "",                    "default:stick"},
+	}
+})
+
+minetest.register_craft({
+	output = "chimney_mtg:fire_logs",
+	recipe = {
+		{"chimney_mtg:aspen_logs"},
+		{"chimney_mtg:fireplace_grate"},
+	}
+})
 
 
 -- =========
@@ -155,12 +230,39 @@ minetest.register_node("chimney_mtg:fire_logs", {
     -- IGNITE ON PUNCH WITH TORCH
     on_punch = function(pos, node, puncher, pointed_thing)
         if puncher and puncher:get_wielded_item():get_name() == "default:torch" then
+            local meta = minetest.get_meta(pos)
+            local saved_wear = meta:get_int("wood_wear") or 0
+
             node.name = "chimney_mtg:fire_logs_burning"
             minetest.swap_node(pos, node)
             minetest.sound_play("fire_flint_and_steel", {pos = pos, gain = 0.4, max_hear_distance = 8})
+
+            local total_fuel_time = 2400
+            local time_percent = (65535 - saved_wear) / 65535
+            local remaining_time = total_fuel_time * time_percent
+
+            local burn_meta = minetest.get_meta(pos)
+            burn_meta:set_int("current_wear", saved_wear)
+            minetest.get_node_timer(pos):start(remaining_time)
+        end
+    end,
+
+    preserve_metadata = function(pos, oldnode, oldmeta, drops)
+        local saved_wear = oldmeta.wood_wear
+        if saved_wear and drops then
+            drops:set_wear(tonumber(saved_wear))
+        end
+    end,
+
+    after_place_node = function(pos, placer, itemstack, pointed_thing)
+        local item_wear = itemstack:get_wear()
+        if item_wear > 0 then
+            local meta = minetest.get_meta(pos)
+            meta:set_int("wood_wear", item_wear)
         end
     end,
 })
+
 
 -- Burning Fire Logs
 minetest.register_node("chimney_mtg:fire_logs_burning", {
@@ -186,7 +288,7 @@ minetest.register_node("chimney_mtg:fire_logs_burning", {
     light_source = 12,
     damage_per_second = 2,
     groups = {choppy = 3, oddly_breakable_by_hand = 3, igniter = 2, not_in_creative_inventory = 1},
-    drop = "chimney_mtg:fire_logs",
+    drop = "",
     sounds = default.node_sound_wood_defaults(),
 
     selection_box = {
@@ -198,17 +300,57 @@ minetest.register_node("chimney_mtg:fire_logs_burning", {
         fixed = {-3/8, -1/2, -1/4, 3/8, 5/16, 5/16}
     },
 
+    on_timer = function(pos, elapsed)
+        local id = minetest.hash_node_position(pos)
+        if chimney_mtg.sound_handles and chimney_mtg.sound_handles[id] then
+            minetest.sound_stop(chimney_mtg.sound_handles[id])
+            chimney_mtg.sound_handles[id] = nil
+        end
+
+        if minetest.registered_nodes["default:ash"] then
+            minetest.set_node(pos, {name = "default:ash"})
+        else
+            minetest.remove_node(pos)
+        end
+
+        minetest.sound_play("default_cool_lava", {pos = pos, gain = 0.3, max_hear_distance = 6}, true)
+        return false
+    end,
+
     on_punch = function(pos, node, puncher, pointed_thing)
         if puncher then
+            local timer = minetest.get_node_timer(pos)
+            local total_fuel_time = 2400
+
+            local remaining = timer:get_timeout()
+            timer:stop()
+
             local id = minetest.hash_node_position(pos)
             if chimney_mtg.sound_handles and chimney_mtg.sound_handles[id] then
                 minetest.sound_stop(chimney_mtg.sound_handles[id])
                 chimney_mtg.sound_handles[id] = nil
             end
 
+            if remaining == 0 then
+                remaining = total_fuel_time
+            end
+
+            local percent_consumed = (total_fuel_time - remaining) / total_fuel_time
+            local calculated_wear = math.floor(percent_consumed * 65535)
+            calculated_wear = math.min(65535, calculated_wear + 4369)
+
+            if calculated_wear >= 65535 then
+                minetest.remove_node(pos)
+                minetest.sound_play("default_wood_footstep", {pos = pos, gain = 0.6}, true)
+                return
+            end
+
             node.name = "chimney_mtg:fire_logs"
             minetest.swap_node(pos, node)
             minetest.sound_play("fire_extinguish_flame", {pos = pos, gain = 0.5, max_hear_distance = 8})
+
+            local meta = minetest.get_meta(pos)
+            meta:set_int("wood_wear", calculated_wear)
         end
     end,
 
@@ -362,17 +504,7 @@ minetest.register_craftitem("chimney_mtg:marshmallow_raw", {
 minetest.register_craftitem("chimney_mtg:sausage_raw", {
 	description = "Raw Sausage",
 	inventory_image = "chimney_mtg_sausage_raw.png",
-
-	on_use = function(itemstack, user, pointed_thing)
-		if not user then return nil end
-
-		user:set_hp(math.min(20, user:get_hp() + 2))
-
-		itemstack:set_name("chimney_mtg:whittled_stick")
-		return itemstack
-	end,
 })
-
 
 minetest.register_craftitem("chimney_mtg:marshmallow_toasted", {
 	description = "Toasted Marshmallow",
@@ -383,7 +515,6 @@ minetest.register_craftitem("chimney_mtg:marshmallow_toasted", {
 		if not user then return nil end
 
 		user:set_hp(math.min(20, user:get_hp() + 2))
-
 		minetest.sound_play("chimney_mtg_mmm", {object = user, gain = 0.8}, true)
 
 		itemstack:set_name("chimney_mtg:whittled_stick")
@@ -400,7 +531,6 @@ minetest.register_craftitem("chimney_mtg:sausage_cooked", {
 		if not user then return nil end
 
 		user:set_hp(math.min(20, user:get_hp() + 5))
-
 		minetest.sound_play("chimney_mtg_mmm", {object = user, gain = 0.8}, true)
 
 		itemstack:set_name("chimney_mtg:whittled_stick")
@@ -408,6 +538,10 @@ minetest.register_craftitem("chimney_mtg:sausage_cooked", {
 	end,
 })
 
+
+-- =============================
+-- INVENTORY CLICK STICK LOADING
+-- =============================
 
 minetest.register_on_player_inventory_action(function(player, action, inventory, inventory_info)
 	local itemstack = player:get_wielded_item()
@@ -441,4 +575,3 @@ minetest.register_on_player_inventory_action(function(player, action, inventory,
 		minetest.sound_play("default_place_node", {object = player, gain = 0.5}, true)
 	end
 end)
-
