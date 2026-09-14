@@ -10,8 +10,9 @@ Designed specifically for **Minetest Game (MTG)**
 - **Interactive Fire Logs:**
   - **Ignition:** Wield a standard `default:torch` and left-click (punch) the unlit logs to light them up.
   - **Extinguish:** Left-click (punch) the burning logs with any tool, block, or bare hand to safely put out the fire.
-  - **Campfire Roasting:** Click an inventory food item while holding an empty stick to load it up. Right-click the burning logs while holding a raw food stick to instantly toast it in your active slot.
-- **Campfire Foods & Tools:**
+  - **Fireplace Roasting:** Click an inventory food item while holding an empty stick to load it up. Right-click the burning logs while holding a raw food stick to instantly toast it in your active slot.
+  - **Fire Timing:** The fire will burn for about 20 minutes (real life time), and then turn to an empty fireplace grate and a pile of ash (if you don't manually extinguish it). To build a new fire, left_click to remove the ash, and then right_click with a bundle of aspen logs, and repeat the dorections above.
+- **Fireplace Foods & Tools:**
   - Craft a reusable `Whittled Roasting Stick` out of basic sticks.
   - Left-click to eat your `Toasted Marshmallows` or `Cooked Sausages` to restore health, play a custom crunch sound, and return your empty stick back to your active slot.
 - **Atmospheric Effects:**

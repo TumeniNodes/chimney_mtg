@@ -131,11 +131,6 @@ minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack
 	end
 end)
 
-minetest.register_craftitem("chimney_mtg:fireplace_grate", {
-	description = "Fireplace Grate",
-	inventory_image = "chimney_mtg_fireplace_grate.png",
-})
-
 minetest.register_craft({
 	output = "chimney_mtg:fireplace_grate",
 	recipe = {
@@ -148,6 +143,11 @@ minetest.register_craft({
 minetest.register_craftitem("chimney_mtg:aspen_logs", {
 	description = "Aspen Logs Bundle",
 	inventory_image = "chimney_mtg_aspen_logs.png",
+})
+
+minetest.register_craftitem("chimney_mtg:ash", {
+	description = "Wood Ash",
+	inventory_image = "chimney_mtg_ash.png",
 })
 
 minetest.register_tool("chimney_mtg:maul", {
@@ -227,17 +227,16 @@ minetest.register_node("chimney_mtg:fire_logs", {
         fixed = {-3/8, -1/2, -1/4, 3/8, 5/16, 5/16}
     },
 
-    -- IGNITE ON PUNCH WITH TORCH
+-- IGNITE ON PUNCH WITH TORCH
     on_punch = function(pos, node, puncher, pointed_thing)
         if puncher and puncher:get_wielded_item():get_name() == "default:torch" then
             local meta = minetest.get_meta(pos)
             local saved_wear = meta:get_int("wood_wear") or 0
 
-            node.name = "chimney_mtg:fire_logs_burning"
-            minetest.swap_node(pos, node)
+            minetest.set_node(pos, {name = "chimney_mtg:fire_logs_burning", param2 = node.param2})
             minetest.sound_play("fire_flint_and_steel", {pos = pos, gain = 0.4, max_hear_distance = 8})
 
-            local total_fuel_time = 2400
+            local total_fuel_time = 1200
             local time_percent = (65535 - saved_wear) / 65535
             local remaining_time = total_fuel_time * time_percent
 
@@ -246,20 +245,35 @@ minetest.register_node("chimney_mtg:fire_logs", {
             minetest.get_node_timer(pos):start(remaining_time)
         end
     end,
+})
 
-    preserve_metadata = function(pos, oldnode, oldmeta, drops)
-        local saved_wear = oldmeta.wood_wear
-        if saved_wear and drops then
-            drops:set_wear(tonumber(saved_wear))
-        end
-    end,
 
-    after_place_node = function(pos, placer, itemstack, pointed_thing)
-        local item_wear = itemstack:get_wear()
-        if item_wear > 0 then
-            local meta = minetest.get_meta(pos)
-            meta:set_int("wood_wear", item_wear)
+minetest.register_node("chimney_mtg:fireplace_grate", {
+    description = "Fireplace Grate",
+    drawtype = "mesh",
+    mesh = "chimney_mtg_fireplace_grate.obj",
+    tiles = {"chimney_mtg_iron.png"},
+    paramtype = "light",
+    paramtype2 = "facedir",
+    groups = {choppy = 3, oddly_breakable_by_hand = 3},
+    sounds = default.node_sound_wood_defaults(),
+    selection_box = {
+        type = "fixed",
+        fixed = {-3/8, -1/2, -3/8, 3/8, -3/8, 5/16}
+    },
+    collision_box = {
+        type = "fixed",
+        fixed = {-3/8, -1/2, -3/8, 3/8, -3/8, 5/16}
+    },
+    on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+        if itemstack:get_name() == "chimney_mtg:aspen_logs" then
+            itemstack:take_item(1)
+            node.name = "chimney_mtg:fire_logs"
+            minetest.swap_node(pos, node)
+            minetest.sound_play("default_place_node", {pos = pos, gain = 0.5}, true)
+            return itemstack
         end
+        return nil
     end,
 })
 
@@ -306,21 +320,16 @@ minetest.register_node("chimney_mtg:fire_logs_burning", {
             minetest.sound_stop(chimney_mtg.sound_handles[id])
             chimney_mtg.sound_handles[id] = nil
         end
-
-        if minetest.registered_nodes["default:ash"] then
-            minetest.set_node(pos, {name = "default:ash"})
-        else
-            minetest.remove_node(pos)
-        end
-
-        minetest.sound_play("default_cool_lava", {pos = pos, gain = 0.3, max_hear_distance = 6}, true)
+        minetest.set_node(pos, {name = "chimney_mtg:fireplace_grate"})
+        minetest.add_item(pos, "chimney_mtg:ash")
+        minetest.sound_play("fire_extinguish_flame", {pos = pos, gain = 0.3, max_hear_distance = 6}, true)
         return false
     end,
 
     on_punch = function(pos, node, puncher, pointed_thing)
         if puncher then
             local timer = minetest.get_node_timer(pos)
-            local total_fuel_time = 2400
+            local total_fuel_time = 1200
 
             local remaining = timer:get_timeout()
             timer:stop()

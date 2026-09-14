@@ -34,6 +34,7 @@ These assets were created by TumeniNodes:
 - chimney_mtg_chimney_top.obj
 - chimney_mtg_fire_logs.obj
 - chimney_mtg_fire_logs_burning.obj
+- chimney_mtg_fireplace_grate.obj
 - all 'bbmodels'
 
 Textures (textures/)
@@ -41,6 +42,7 @@ Textures (textures/)
 - chimney_mtg_iron.png
 - chimney_mtg_fireplace_grate.png
 - chimney_mtg_aspen_logs.png
+- chimney_mtg_ash.png
 - chimney_mtg_marshmallow_raw.png
 - chimney_mtg_marshmallow_toasted.png
 - chimney_mtg_sausage_cooked.png
